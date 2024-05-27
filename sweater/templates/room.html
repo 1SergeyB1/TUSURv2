@@ -33,9 +33,10 @@
 
                       <div class="card" style="border:solid;border-radius: 5%;overflow: hidden;word-break: break-all;">
                         {% if i.photo %}<img src="{{url_for('upload', file = i.photo)}}" alt="Aleq" width="50" height="50"/>{% endif %}
-                          <p>Инвентарный номер - {{i.id}}</p>
+                          <p>Инвентарный номер</p>
+                        <p>{{i.id}}</p>
                         <div class="buttons">
-                          <a href = "{{url_for('property',  property_id = i.id) }}"><button class="btn btn-outline-secondary">Перейти</button></a>
+                         <a href = "{{url_for('property',  property_id = i.id) }}"><button class="btn btn-outline-secondary">Перейти</button></a>
                         </div>
                       </div>
                      {%endfor%}
@@ -53,6 +54,6 @@
           </div>
 
         </div>
-
+</div>
 
 {% endblock %}

@@ -46,12 +46,26 @@ class AddBuildingForm(FlaskForm):
     submit = SubmitField('Добавить корпус')
 
 
+class EditBuildingForm(FlaskForm):
+    address = StringField('Адрес', [DataRequired(message='Форма не может быть пустой')])
+    photo = FileField('Фотография')
+    submit = SubmitField('Редактировать корпус')
+
+
 class AddRoomForm(FlaskForm):
     building = SelectField('Корпус', [DataRequired(message='Форма не может быть пустой')], choices=[])
     floor = IntegerField('Этаж', [DataRequired(message='Форма не может быть пустой')])
     number = IntegerField('Номер помещения', [DataRequired(message='Форма не может быть пустой')])
     photo = FileField('Фотография', [DataRequired(message='Форма не может быть пустой')])
     submit = SubmitField('Добавить помещение')
+
+
+class EditRoomForm(FlaskForm):
+    building = SelectField('Корпус', [DataRequired(message='Форма не может быть пустой')], choices=[])
+    floor = IntegerField('Этаж', [DataRequired(message='Форма не может быть пустой')])
+    number = IntegerField('Номер помещения', [DataRequired(message='Форма не может быть пустой')])
+    photo = FileField('Фотография')
+    submit = SubmitField('Редактировать комнату помещение')
 
 
 class AddCategoryForm(FlaskForm):
@@ -84,6 +98,10 @@ class AddProperty(FlaskForm):
 class EditProperty(FlaskForm):
     name = StringField('Название предмета', [DataRequired(message='Форма не может быть пустой')])
     category = SelectField('Категория предмета', [DataRequired(message='Форма не может быть пустой')], choices=[])
-    photo = FileField('Фотография', [DataRequired(message='Форма не может быть пустой')])
+    photo = FileField('Фотография')
     is_works = BooleanField('Работает?')
     submit = SubmitField('Добавить предмет')
+
+
+class CreateQrCode(FlaskForm):
+    submit = SubmitField('Сгенерировать QR код')

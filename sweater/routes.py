@@ -3,11 +3,12 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash, generate_password_hash
 from os import path, remove
+import segno
 
 from sweater import app, db
 from models import User, Building, Category, Floor, Room, Property, History
 from forms import AddUserForm, LoginForm, UserForm, AddBuildingForm, AddCategoryForm, AddRoomForm, ChoseFloor, \
-    SetTheRoom, AddProperty, EditProperty
+    SetTheRoom, AddProperty, EditProperty, CreateQrCode, EditBuildingForm, EditRoomForm
 
 
 def get_location(room_id: int):
@@ -184,7 +185,7 @@ def edit_user(user_id):
             db.session.commit()
             return redirect(url_for('users'))
 
-        return render_template('create_user.html', form=form, notification=True, user=access)
+        return render_template('edit_user.html', form=form, notification=True, user=access)
     else:
         return redirect(url_for('index'))
 
@@ -246,7 +247,7 @@ def edit_building(building_id):
     access = db.session.get(User, current_user.get_id())
     if access.role:
         building = db.session.get(Building, building_id)
-        form = AddBuildingForm(address=building.address)
+        form = EditBuildingForm(address=building.address)
         if form.validate_on_submit():
             # Запрашиваем в база пользователя по email
             is_building = Building.query.filter_by(address=form.address.data).first()
@@ -360,16 +361,18 @@ def delete_category(category_id):
 @app.route('/room/<int:room_id>', methods=['POST', 'GET'])
 @login_required
 def room(room_id):
+    access = db.session.get(User, current_user.get_id())
     room = db.session.get(Room, room_id)
     pro = room.property
     sort_propety = {}
     for item in pro:
         category = db.session.get(Category, item.category)
         if category.name in sort_propety:
-            sort_propety[category.name].append(item.name)
+            sort_propety[category.name].append(item)
         else:
             sort_propety[category.name] = [item]
-    return render_template('room.html', notification=True, room=room, sort=sort_propety)
+    return render_template('room.html', notification=True, room=room, sort=sort_propety, user=access)
+
 
 
 @app.route('/choose_a_room/<int:building_id>', methods=['POST', 'GET'])
@@ -429,7 +432,7 @@ def edit_room(room_id):
     access = db.session.get(User, current_user.get_id())
     if access.role:
         room = db.session.get(Room, room_id)
-        form = AddRoomForm(floor=room.floor, number=room.number)
+        form = EditRoomForm(floor=room.floor, number=room.number)
         building = Building.query.order_by(Building.id).all()
         form.building.choices = [(i.id, i.address) for i in building]
         if form.validate_on_submit():
@@ -567,7 +570,21 @@ def property(property_id):
     property = db.session.get(Property, property_id)
     category = db.session.get(Category, property.category)
     responsible_person = db.session.get(User, property.responsible_person)
+    form = CreateQrCode()
+    if form.validate_on_submit():
+        filename = f'qrcode/{property_id}.png'
+        file_path = path.join(app.config['UPLOAD_FOLDER'], filename)
+        qrcode = segno.make_qr(str(property_id))
+        qrcode.save(file_path)
+        property.qr_code = file_path
+        db.session.add(property)
+        db.session.commit()
+    if not property.qr_code:
+        return render_template('property.html', notification=True, property=property, user=user, category=category,
+                               responsible_person=responsible_person, form=form)
     return render_template('property.html', notification=True, property=property, user=user, category=category, responsible_person=responsible_person)
+
+
 
 
 @app.route('/edit_property/<int:property_id>', methods=['POST', 'GET'])
@@ -598,7 +615,7 @@ def edit_property(property_id):
             db.session.add(property)
             db.session.commit()
             return redirect(url_for('property',property_id=property_id))
-        return render_template('edit_property.html', notification=True, form=form, user=user)
+        return render_template('edit_property.html', notification=True, form=form, user=user, property=property)
 
 
 @app.before_request

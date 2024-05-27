@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% import 'bootstrap/wtf.html' as wtf %}
-{% block title %}Профиль{% endblock %}
+{% block title %}Страница имущества{% endblock %}
 {% block content %}
 <div class="container">
     <div class="main-body">
@@ -88,6 +88,7 @@
                     </div>
                   </div>
                   <hr>
+                  {% if user.role %}
                   <div class="row">
                     <div class="col-sm-12">
                       <a class="btn btn-info " target="__blank" href="{{url_for('edit_property',property_id=property.id)}}">Редактировать</a>
@@ -97,7 +98,22 @@
                       <a class="btn btn-info " target="__blank" href="{{url_for('set_the_room',property_id=property.id)}}">Назначить помещение и ответственное лицо</a>
                     </div>
                   </div>
+                {% endif %}
+
+                  {%if property.qr_code%}
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <img style="border-radius: 10%;" src="{{url_for('upload', file=property.qr_code)}}" alt="Admin" class="rounded-circle" width="150" height="150">
+                    </div>
+                  </div>
+                  {%else%}
+                  <div class="row">
+                    <div class="col-sm-12">
+                      {{ wtf.quick_form(form)}}
+                    </div>
+                  </div>
                 </div>
+                {%endif%}
               </div>
               </div>
 
