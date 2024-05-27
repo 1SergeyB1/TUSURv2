@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %}Профиль{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="main-body">
+          <div class="row gutters-sm">
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-column align-items-center text-center">
+                    {%if property.photo%}<img style="border-radius: 10%;" src="{{url_for('upload', file=property.photo)}}" alt="Admin" class="rounded-circle" width="150" height="150">{%endif%}
+                    <div class="mt-3">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <br>
+            </div>
+            <div class="col-md-8">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Название</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{property.name}}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Категория</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{category.name}}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Место положения</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {%if property.location%}
+                      {{get_location(property.location)}}
+                      {%else%}
+                      <h1>Имущество не имеет адреса</h1>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Ответственное лицо</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {%if responsible_person%}
+                      {{responsible_person.first_name}} {{responsible_person.patronymic}} {{responsible_person.last_name}}
+                      <br>
+                      {{responsible_person.email}}
+                      {%else%}
+                      <h1>Имущество не имеет ответственного лица</h1>
+                      {%endif%}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Дата введения в эксплуатацию</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{property.date_of_commissioning}}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Состояние(работает или нет)</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {% if property.is_works %}
+                      Да
+                      {%else%}
+                      НЕТ
+                      {%endif%}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <a class="btn btn-info " target="__blank" href="{{url_for('edit_property',property_id=property.id)}}">Редактировать</a>
+                    </div>
+                    <hr>
+                    <div class="col-sm-12">
+                      <a class="btn btn-info " target="__blank" href="{{url_for('set_the_room',property_id=property.id)}}">Назначить помещение и ответственное лицо</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+
+
+
+            </div>
+          </div>
+
+        </div>
+            <br>
+            <label>История</label>
+
+                        <select name="pets" id="pet-select">
+                          {%for i in property.history%}
+                          <option>
+                            {{get_location(i.room_id)}}
+                            {{get_user(i.user_id)}}
+                            {{i.date_of}}
+                          </option>
+                          {% endfor %}
+                        </select>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %}Список пользователей{% endblock %}
+
+{% block content %}
+{{ wtf.quick_form(form)}}
+{% if data %}
+<div style="display: flex;width: 100%;flex-direction: row-reverse;justify-content:center;">
+{% for i in data %}
+
+<div class="card" style="border:solid;border-radius: 5%;overflow: hidden;word-break: break-all;">
+  {% if i.photo %}<img src="{{url_for('upload', file = i.photo)}}" alt="Aleq" width="300" height="300"/>{% endif %}
+    <p>{{i.number}}</p>
+  <div class="buttons">
+      <a href = "{{url_for('edit_room',  room_id = i.id) }}"><button class="btn btn-outline-secondary">Редактировать</button></a>
+      <a href = "{{url_for('room',  room_id = i.id) }}"><button class="btn btn-outline-secondary">Перейти</button></a>
+      <a href = "{{url_for('delete_room',  room_id = i.id) }}"><button class="btn btn-outline-secondary">Удалить</button> </a>
+  </div>
+</div>
+{% endfor %}
+</div>
+{% endif %}
+<br>
+<a href="{{url_for('create_room')}}"><button class="btn btn-primary">+</button></a>
+{% endblock %}

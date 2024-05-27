@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %}Профиль{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="main-body">
+          <div class="row gutters-sm">
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-column align-items-center text-center">
+                    {%if room.photo%}<img style="border-radius: 10%;" src="{{url_for('upload', file=room.photo)}}" alt="Admin" class="rounded-circle" width="150" height="150">{%endif%}
+                    <div class="mt-3">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <br>
+            </div>
+            <div class="col-md-8">
+              <div class="card mb-3">
+                <div class="card-body">
+
+
+                  {%for key, value in sort.items() %}
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">{{key}}</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <div style="display: flex;width: 100%;flex-direction: row-reverse;justify-content:center;">
+                      {% for i in value %}
+
+                      <div class="card" style="border:solid;border-radius: 5%;overflow: hidden;word-break: break-all;">
+                        {% if i.photo %}<img src="{{url_for('upload', file = i.photo)}}" alt="Aleq" width="50" height="50"/>{% endif %}
+                          <p>Инвентарный номер - {{i.id}}</p>
+                        <div class="buttons">
+                          <a href = "{{url_for('property',  property_id = i.id) }}"><button class="btn btn-outline-secondary">Перейти</button></a>
+                        </div>
+                      </div>
+                     {%endfor%}
+                    </div>
+                  </div>
+                  <hr>
+                  {% endfor %}
+                </div>
+              </div>
+              </div>
+
+
+
+            </div>
+          </div>
+
+        </div>
+
+
+{% endblock %}

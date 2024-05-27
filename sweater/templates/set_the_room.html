@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %}Добавить пользователя{% endblock %}
+{% block content %}
+{{ wtf.quick_form(form)}}
+{%if no_building%}
+<h1>В базе данных нет корпусов!</h1>
+<a href="{{url_for('create_building')}}"><button class="btn btn-primary">+</button></a>
+{%endif%}
+{%if no_floor%}
+<h1>У данного корпуса нет этажей!</h1>
+<a href="{{url_for('create_room')}}"><button class="btn btn-primary">+</button></a>
+{%endif%}
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %}Список пользователей{% endblock %}
+{% block content %}
+<table border="1">
+    <tr><th class="bg-body-tertiary border rounded-3">Наименование</th><th class="bg-body-tertiary border rounded-3">Инвентарный номер</th><th class="bg-body-tertiary border rounded-3">Фотография</th><th class="bg-body-tertiary border rounded-3">Перейти</th>
+    {% for i in data %}
+        <tr><th class="bg-body-tertiary border rounded-3">{{i.name}}</th>
+            <th class="bg-body-tertiary border rounded-3">{{i.id}}</th>
+            <th class="bg-body-tertiary border rounded-3">{%if i.photo%}<img src="{{url_for('upload', file = i.photo)}}" alt="Aleq" width="100" height="100"/>{% endif %}</th>
+            <th class="bg-body-tertiary border rounded-3"><a href = "{{url_for('property',  property_id = i.id) }}"><button class="btn btn-outline-secondary">Перейти</button></a></th>
+        </tr>
+    {%endfor%}
+</table>
+<br>
+<a href="{{url_for('create_property')}}"><button class="btn btn-primary">+</button></a>
+{% endblock %}
+
