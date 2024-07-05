@@ -15,7 +15,10 @@ def get_location(room_id: int):
     room = db.session.get(Room, room_id)
     floor = db.session.get(Floor, room.floor)
     building = db.session.get(Building, floor.building)
-    return '\n'.join([f'Адрес: {building.address}', f'Этаж: {floor.number}', f'Помещение: {room.number}'])
+    if room and floor and building:
+        return '\n'.join([f'Адрес: {building.address}', f'Этаж: {floor.number}', f'Помещение: {room.number}'])
+    else:
+        return ''
 
 
 def get_user(user_id: int):
@@ -185,7 +188,7 @@ def edit_user(user_id):
             db.session.commit()
             return redirect(url_for('users'))
 
-        return render_template('edit_user.html', form=form, notification=True, user=access)
+        return render_template('edit_user.html', form=form, notification=True, user=access, edit_user = user)
     else:
         return redirect(url_for('index'))
 
@@ -278,7 +281,7 @@ def edit_building(building_id):
 @login_required
 def delete_building(building_id):
     access = db.session.get(User, current_user.get_id())
-    if access.role or access.id == access.id:
+    if access.role:
         if db.session.get(Building, building_id).photo:
             remove(path.join(app.root_path, db.session.get(Building, building_id).photo))
         delete = db.session.get(Building, building_id)

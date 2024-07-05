@@ -16,5 +16,7 @@
     {%endfor%}
 </table>
 <br>
+{%if user.role%}
 <a href="{{url_for('create_category')}}"><button class="btn btn-primary">+</button></a>
+{% endif %}
 {% endblock %}

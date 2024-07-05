@@ -12,14 +12,20 @@
   {% if i.photo %}<img src="{{url_for('upload', file = i.photo)}}" alt="Aleq" width="300" height="300"/>{% endif %}
     <p>{{i.number}}</p>
   <div class="buttons">
+      {%if user.role%}
       <a href = "{{url_for('edit_room',  room_id = i.id) }}"><button class="btn btn-outline-secondary">Редактировать</button></a>
+      {%endif%}
       <a href = "{{url_for('room',  room_id = i.id) }}"><button class="btn btn-outline-secondary">Перейти</button></a>
+      {%if user.role%}
       <a href = "{{url_for('delete_room',  room_id = i.id) }}"><button class="btn btn-outline-secondary">Удалить</button> </a>
+      {%endif%}
   </div>
 </div>
 {% endfor %}
 </div>
 {% endif %}
 <br>
+{%if user.role%}
 <a href="{{url_for('create_room')}}"><button class="btn btn-primary">+</button></a>
+{%endif%}
 {% endblock %}

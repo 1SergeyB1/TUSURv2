@@ -13,6 +13,8 @@
     {%endfor%}
 </table>
 <br>
+{% if user.role%}
 <a href="{{url_for('create_property')}}"><button class="btn btn-primary">+</button></a>
+{%endif%}
 {% endblock %}
 
